@@ -1,10 +1,12 @@
-import React from "react";
 import Sidebar from "./Sidebar";
 import MainContainer from "./MainContainer";
-const Body = () => {
+
+const Body = (props) => {
+  const { showMenu } = props;
+
   return (
     <div className="flex">
-      <Sidebar />
+      {showMenu && <Sidebar />}
       <MainContainer />
     </div>
   );
