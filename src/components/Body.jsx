@@ -2,11 +2,11 @@ import Sidebar from "./Sidebar";
 import MainContainer from "./MainContainer";
 
 const Body = (props) => {
-  const { showMenu } = props;
+  
 
   return (
     <div className="flex">
-      {showMenu && <Sidebar />}
+      <Sidebar />
       <MainContainer />
     </div>
   );

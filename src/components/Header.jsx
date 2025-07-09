@@ -3,12 +3,12 @@ import { toggleMenu } from "../utils/appSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 const Header = (props) => {
-  const { setmenuflag } = props;
+
   const dispatch = useDispatch();
-  const showMenu = useSelector((store) => store.app.isMenuOpen);
+
   const menuHandler = () => {
     dispatch(toggleMenu());
-    setmenuflag(showMenu);
+ 
   };
   return (
     <div className="grid grid-flow-col m-2 p-5 shadow-lg">
