@@ -1,7 +1,7 @@
 import React from "react";
 import { toggleMenu } from "../utils/appSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+
 const Header = (props) => {
 
   const dispatch = useDispatch();
