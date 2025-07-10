@@ -3,8 +3,8 @@ import React from 'react'
 const VideoCard = (props) => {
 
   const {snippet,statistics}=props.videoDetails;
-  const {channelTitle,description,title}=snippet;
-  const {viewCount,likeCount}=statistics;
+  const {channelTitle,title}=snippet;
+  const {viewCount}=statistics;
   const {thumbnails}=snippet;
 
   return (

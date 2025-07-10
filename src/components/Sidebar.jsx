@@ -6,7 +6,7 @@ const Sidebar = () => {
 
   console.log(showMenu)
   return !showMenu ? null : (
-    <div className="p-5 shadow-lg w-48">
+    <div className="p-5 shadow-lg w-48 rounded-md">
       <ul>
         <li>Home</li>
         <li>Shorts</li>
