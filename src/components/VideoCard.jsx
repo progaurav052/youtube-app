@@ -8,6 +8,7 @@ const VideoCard = (props) => {
   const {thumbnails}=snippet;
 
   return (
+    
     <div className='p-2 m-2 w-64 shadow-lg rounded-lg'>
         <img src={thumbnails.medium.url} alt="video-thumbail" className='rounded-sm'/>
         <ul>

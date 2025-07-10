@@ -2,7 +2,7 @@ import Sidebar from "./Sidebar";
 
 import { Outlet } from "react-router-dom";
 
-const Body = (props) => {
+const Body = () => {
   
 
   return (
