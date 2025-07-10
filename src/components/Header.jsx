@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toggleMenu } from "../utils/appSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { addToCache } from "../utils/searchSlice";
 
 const Header = (props) => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions,setShowSuggestions]=useState(true)
+  const [showSuggestions, setShowSuggestions] = useState(true);
+  const cache = useSelector((store)=>{return store.search.cacheMap}) // this cacheMap is an empty object initially
   const menuHandler = () => {
     dispatch(toggleMenu());
   };
@@ -16,8 +18,17 @@ const Header = (props) => {
     //getSearchSuggestions(searchText);// this will make an api call on every key press
     // i want to implement debouncing for better performance and avoid api calls on every key press
     // using the return () which is part of useEffect, this return() will be called every time reconcilation is triggered to destroy the component
+
+    // we will use caching to optimize the number of api calls being called when searching...
     const timer = setTimeout(() => {
-      getSearchSuggestions(searchText);
+      if(cache[searchText])
+      {
+        setSuggestions(cache[searchText]);
+      }
+      else{
+        getSearchSuggestions(searchText);
+      }
+      
     }, 300);
 
     return () => {
@@ -25,10 +36,13 @@ const Header = (props) => {
     };
   }, [searchText]);
 
-  const getSearchSuggestions = async () => {
+  const getSearchSuggestions = async (searchText) => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchText);
     const json = await data.json();
     console.log(json);
+    dispatch(addToCache({
+      [searchText]:json[1]
+    }))
     setSuggestions(json[1]);
   };
 
@@ -56,10 +70,10 @@ const Header = (props) => {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
-            onFocus={()=>{
+            onFocus={() => {
               setShowSuggestions(true);
             }}
-            onBlur={()=>{
+            onBlur={() => {
               setShowSuggestions(false);
             }}
           />
@@ -67,15 +81,22 @@ const Header = (props) => {
             🔍
           </button>
         </div>
-        {showSuggestions&&suggestions.length!==0&&<div className="absolute bg-white py-2 px-2 w-[30rem] shadow-lg rounded-lg border border-gray-100">
-          <ul>
-            {suggestions.map((item)=>{
-              return(
-                <li key={item} className="py-2 px-3 shadow-sm hover:bg-gray-200">🔍 {item}</li>
-              );
-            })}
-          </ul>
-        </div>}
+        {showSuggestions && suggestions.length !== 0 && (
+          <div className="absolute bg-white py-2 px-2 w-[30rem] shadow-lg rounded-lg border border-gray-100">
+            <ul>
+              {suggestions.map((item) => {
+                return (
+                  <li
+                    key={item}
+                    className="py-2 px-3 shadow-sm hover:bg-gray-200"
+                  >
+                    🔍 {item}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="col-span-1 px-10">
         <img
