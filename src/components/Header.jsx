@@ -1,22 +1,43 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { toggleMenu } from "../utils/appSlice";
 import { useDispatch } from "react-redux";
+import { YOUTUBE_SEARCH_API } from "../utils/constants";
 
 const Header = (props) => {
-
   const dispatch = useDispatch();
-
+  const [searchText, setSearchText] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions,setShowSuggestions]=useState(true)
   const menuHandler = () => {
     dispatch(toggleMenu());
- 
   };
+  useEffect(() => {
+    //getSearchSuggestions(searchText);// this will make an api call on every key press
+    // i want to implement debouncing for better performance and avoid api calls on every key press
+    // using the return () which is part of useEffect, this return() will be called every time reconcilation is triggered to destroy the component
+    const timer = setTimeout(() => {
+      getSearchSuggestions(searchText);
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchText]);
+
+  const getSearchSuggestions = async () => {
+    const data = await fetch(YOUTUBE_SEARCH_API + searchText);
+    const json = await data.json();
+    console.log(json);
+    setSuggestions(json[1]);
+  };
+
   return (
     <div className="grid grid-flow-col m-2 p-5 shadow-lg">
       <div className="flex col-span-1">
         <img
           onClick={menuHandler}
           className="h-8 cursor-pointer"
-          
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAARVBMVEX///8jHyAgHB0MAAUOBQikpKQpJSadnZ309PUAAAAIAADZ2Nj8/Pyop6cYExXBwMAtKSpta2xpZ2draWpfXV7BwcGvrq77CGWbAAABG0lEQVR4nO3cwXKCMBQFUApFTQAVtf3/Ty3tsKhLZpKSxnP+4M57JCwyt2kAAAAAAAAAAAAAAADgFQ1TX4ZpyJJvvIXYlSGGecyQcI5v5Yi39AGHsHeqJyH9ovYljXAZ4qeEm9W/pc29pCHmOGma8R7iexky3RbLovbHMvR5bnwAAAAAAAAAANhkPJUhV77hcT2U4frI8mToI5zbUpzDJX3A06Hd+7neL22X/mHbpbDXl+mHeOz2DvUk9skT1j/D+r/DZYiVn6UvcB9+2/tnZpUrHgAAAAAAAAAAbDBMe5ftrXK17M619yZq2f1bGfpLp5JGmKWDtv6E9W9p/SfNz22xdxn7Kl/LbuW9+gAAAAAAAAAAAAAAAPCffAHLSDTi5JU+gwAAAABJRU5ErkJggg=="
           alt="hamburger-image"
         />
@@ -26,14 +47,35 @@ const Header = (props) => {
           alt="youtube-logo"
         />
       </div>
-      <div className="col-span-10">
-        <input
-          className="w-1/2 border border-gray-400 p-2 rounded-l-full"
-          type="text"
-        />
-        <button className="border border-gray-400 p-2 rounded-r-full px-5 py-2 bg-gray-200">
-          🔍
-        </button>
+      <div className="col-span-10 px-10 relative">
+        <div>
+          <input
+            className=" px-5 w-1/2 border border-gray-400 p-2 rounded-l-full"
+            type="text"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+            onFocus={()=>{
+              setShowSuggestions(true);
+            }}
+            onBlur={()=>{
+              setShowSuggestions(false);
+            }}
+          />
+          <button className="border border-gray-400 p-2 rounded-r-full px-5 py-2 bg-gray-200">
+            🔍
+          </button>
+        </div>
+        {showSuggestions&&suggestions.length!==0&&<div className="absolute bg-white py-2 px-2 w-[30rem] shadow-lg rounded-lg border border-gray-100">
+          <ul>
+            {suggestions.map((item)=>{
+              return(
+                <li key={item} className="py-2 px-3 shadow-sm hover:bg-gray-200">🔍 {item}</li>
+              );
+            })}
+          </ul>
+        </div>}
       </div>
       <div className="col-span-1 px-10">
         <img
