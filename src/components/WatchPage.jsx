@@ -11,16 +11,18 @@ import { addMessage } from "../utils/chatSlice";
 const WatchPage = () => {
   const [searchParam] = useSearchParams(); // for getting search/query params
   const dispatch = useDispatch();
-  const chatMessages=useSelector((store)=>store.chat.messages)
+  const chatMessages = useSelector((store) => store.chat.messages);
   useEffect(() => {
     dispatch(collapseMenu());
 
     const interval = setInterval(() => {
       console.log("API-POLLING");
-      dispatch(addMessage({
-        username: generateName(),
-        usermessage:  generateString(10)+ "⭐️",
-      }));
+      dispatch(
+        addMessage({
+          username: generateName(),
+          usermessage: generateString(10) + "⭐️",
+        })
+      );
     }, 1000);
 
     return () => {
@@ -46,13 +48,16 @@ const WatchPage = () => {
             allowFullScreen
           ></iframe>
         </div>
-        <div className="p-2 m-4 mr-4 border border-gray-400 w-full h-[500px]  rounded-lg items-center overflow-y-scroll flex-reverse">
-          <h1 className="bg-blue-100 font-bold border-white rounded-lg p-3 ">
+        <div className="w-full mt-4 mr-4">
+          <h1 className="bg-blue-100 w-full items-center font-bold border-white rounded-t-lg p-3 ">
             Livechat
           </h1>
-          {chatMessages.map((chatmessage,index)=>{
-            return(<ChatMessage key={index} message={chatmessage}/>);
-          })}
+
+          <div className="p-2  mr-4 border border-gray-400 w-full h-[450px] rounded-b-lg overflow-y-scroll flex flex-col-reverse">
+            {chatMessages.map((chatmessage, index) => (
+              <ChatMessage key={index} message={chatmessage} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="p-2 m-2 w-[1/2]">
