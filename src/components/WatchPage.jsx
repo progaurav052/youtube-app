@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collapseMenu } from "../utils/appSlice";
 import { useSearchParams } from "react-router-dom";
@@ -10,9 +10,11 @@ import generateString from "../utils/getRandomString";
 import { addMessage } from "../utils/chatSlice";
 const WatchPage = () => {
   const [searchParam] = useSearchParams(); // for getting search/query params
+  const [liveChatText, setLiveChatText] = useState("");
   const dispatch = useDispatch();
   const chatMessages = useSelector((store) => store.chat.messages);
   useEffect(() => {
+    console.log("Component Rendered");
     dispatch(collapseMenu());
 
     const interval = setInterval(() => {
@@ -57,6 +59,31 @@ const WatchPage = () => {
             {chatMessages.map((chatmessage, index) => (
               <ChatMessage key={index} message={chatmessage} />
             ))}
+          </div>
+          <div className="mt-2 ml-20">
+            <input
+              type="text"
+              className="p-2 rounded-l-lg border border-gray-400"
+              placeholder="Your message"
+              value={liveChatText}
+              onChange={(e) => {
+                setLiveChatText(e.target.value);
+              }}
+            />
+            <button
+              className="bg-green-200  rounded-r-lg p-2"
+              onClick={() => {
+                dispatch(
+                  addMessage({
+                    username: "Akshay",
+                    usermessage:liveChatText,
+                  })
+                );
+                setLiveChatText("");
+              }}
+            >
+              Send
+            </button>
           </div>
         </div>
       </div>
