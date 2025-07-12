@@ -8,9 +8,10 @@ import ChatMessage from "./ChatMessage";
 import generateName from "../utils/getRandomName";
 import generateString from "../utils/getRandomString";
 import { addMessage } from "../utils/chatSlice";
+import LiveChat from "./LiveChat";
 const WatchPage = () => {
   const [searchParam] = useSearchParams(); // for getting search/query params
-  const [liveChatText, setLiveChatText] = useState("");
+
   const dispatch = useDispatch();
   const chatMessages = useSelector((store) => store.chat.messages);
   useEffect(() => {
@@ -60,31 +61,7 @@ const WatchPage = () => {
               <ChatMessage key={index} message={chatmessage} />
             ))}
           </div>
-          <div className="mt-2 ml-20">
-            <input
-              type="text"
-              className="p-2 rounded-l-lg border border-gray-400"
-              placeholder="Your message"
-              value={liveChatText}
-              onChange={(e) => {
-                setLiveChatText(e.target.value);
-              }}
-            />
-            <button
-              className="bg-green-200  rounded-r-lg p-2"
-              onClick={() => {
-                dispatch(
-                  addMessage({
-                    username: "Akshay",
-                    usermessage:liveChatText,
-                  })
-                );
-                setLiveChatText("");
-              }}
-            >
-              Send
-            </button>
-          </div>
+          <LiveChat />
         </div>
       </div>
       <div className="p-2 m-2 w-[1/2]">
