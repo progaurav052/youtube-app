@@ -10,7 +10,7 @@ const DemoCode2 = () => {
   const prime = getPrime(number);
 
   return (
-    <div className={"w-96 h-96 border border-gray-400 bg-yellow-200 m-4" +(!theme &&  "bg-red-400")}>
+    <div className={"h-96 border border-gray-400 bg-yellow-200 m-4" +(!theme &&  "bg-black-400")}>
       <input
         type="number"
         className="border border-red-400 p-2 m-2"
