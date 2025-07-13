@@ -1,33 +1,38 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useMemo } from "react";
 import getPrime from "../utils/getPrime";
 
 const DemoCode2 = () => {
   const [number, setNumber] = useState(0);
-  const [theme, setTheme] = useState(true); // false for black , true for white
+  const [toggleTheme, setToggleTheme] = useState(true); // true == yellow , false = blue
 
   console.log("Component Rendered");
-
-  const prime = getPrime(number);
-
+  const prime = useMemo(() => {
+    return getPrime(number);
+  }, [number]); // this implies to cache the result of calcultaion bw renders , as a result when a number is not chnaged the function is not called again because of state chnage of some other state variable , i.e in such case use cached value
   return (
-    <div className={"h-96 border border-gray-400 bg-yellow-200 m-4" +(!theme &&  "bg-black-400")}>
+    <div
+      className={`p-2 m-5 border border-gray-700 w-96 h-96 ${
+        toggleTheme ? "bg-yellow-300" : "bg-blue-300"
+      }`}
+    >
       <input
         type="number"
-        className="border border-red-400 p-2 m-2"
+        placeholder="Enter your number"
+        className="p-2 border border-red-500 rounded-lg"
         value={number}
-        placeholder="Enter your Number"
         onChange={(e) => {
           setNumber(e.target.value);
         }}
       />
-      <h1 className="font-bold text-xl">{prime}</h1>
+      <h1>The prime nth prime number is: {prime}</h1>
       <button
-        className="p-4 m-4 rounded-lg bg-green-300"
+        className="rounded-lg p-2 m-2 font-bold bg-red-400"
         onClick={() => {
-          setTheme(!theme);
+          setToggleTheme(!toggleTheme);
         }}
       >
-        Change Theme
+        Toggle Theme
       </button>
     </div>
   );

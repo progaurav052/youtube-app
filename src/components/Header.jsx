@@ -39,7 +39,7 @@ const Header = (props) => {
   const getSearchSuggestions = async (searchText) => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchText);
     const json = await data.json();
-    console.log(json);
+   
     dispatch(addToCache({
       [searchText]:json[1]
     }))
